@@ -1,0 +1,9 @@
+cool. build phase 1: generate repo structure + ingest pipeline only, with a dummy dataframe fallback.
+Acceptance criteria:
+	•	streamlit run app.py works
+	•	Ingest tab: upload Excel → dataframe preview
+	•	st.session_state contains:
+	•	df_core
+	•	data_version
+	•	selected_system_id
+	•	Validation errors show cleanly

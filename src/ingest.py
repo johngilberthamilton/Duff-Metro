@@ -11,6 +11,7 @@ from typing import Optional, Tuple
 
 from src.validate import validate_dataframe, ValidationError
 from src.state import compute_data_version, initialize_session_state
+from src.geocode import add_coordinates_to_dataframe
 
 
 def create_dummy_dataframe() -> pd.DataFrame:
@@ -168,6 +169,14 @@ def render_ingest_tab():
                     )
                     
                     if df_cleaned is not None:
+                        # Add geocoding for coordinates
+                        with st.spinner("Geocoding locations..."):
+                            df_with_coords, unresolved = add_coordinates_to_dataframe(df_cleaned)
+                            df_cleaned = df_with_coords
+                            
+                            if unresolved:
+                                st.warning(f"⚠️ Could not geocode {len(unresolved)} location(s): {', '.join(unresolved[:5])}")
+                        
                         # Store in session state
                         st.session_state.df_core = df_cleaned
                         st.session_state.data_version = data_version
@@ -212,6 +221,10 @@ def render_ingest_tab():
         
         if st.button("Load Dummy Data", type="secondary"):
             dummy_df = create_dummy_dataframe()
+            # Add geocoding for dummy data too
+            with st.spinner("Geocoding locations..."):
+                df_with_coords, unresolved = add_coordinates_to_dataframe(dummy_df)
+                dummy_df = df_with_coords
             st.session_state.df_core = dummy_df
             st.session_state.data_version = "dummy_data_v1"
             st.success("✅ Dummy data loaded!")

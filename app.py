@@ -7,6 +7,10 @@ Main app with three tabs: Ingest, Map, and Plots.
 import streamlit as st
 
 from src.ingest import render_ingest_tab
+from src.map.map_view import render_map_view
+from src.plots import render_plots_tab
+from src.profile.panel import render_profile_panel
+from src.state import initialize_session_state
 
 # Configure page
 st.set_page_config(
@@ -36,6 +40,8 @@ st.markdown("""
 
 def main():
     """Main app function."""
+    initialize_session_state()
+    
     st.title("🚈 Duff Metro:  Subway Systems Explorer")
     st.markdown("Visualize data about the world's subway systems and explore AI-generated profiles.")
     
@@ -47,19 +53,47 @@ def main():
     
     with tab2:
         st.header("🗺️ Map View")
-        st.info("Map functionality will be implemented in Phase 2.")
-        if st.session_state.get("df_core") is not None:
-            st.write(f"Ready to visualize {len(st.session_state.df_core)} systems on the map.")
+        df = st.session_state.get("df_core")
+        
+        if df is None or df.empty:
+            st.info("Please upload data in the Ingest tab first.")
         else:
-            st.write("Please upload data in the Ingest tab first.")
+            # Create two columns: map on left, profile on right
+            col1, col2 = st.columns([2, 1])
+            
+            with col1:
+                # Render map and get selected system
+                selected_system_id = render_map_view(df)
+                
+                # Update session state if selection changed
+                if selected_system_id:
+                    st.session_state.selected_system_id = selected_system_id
+            
+            with col2:
+                # Show profile panel
+                render_profile_panel(df, st.session_state.get("selected_system_id"))
     
     with tab3:
         st.header("📊 Plots View")
-        st.info("Plots functionality will be implemented in Phase 2.")
-        if st.session_state.get("df_core") is not None:
-            st.write(f"Ready to create plots for {len(st.session_state.df_core)} systems.")
+        df = st.session_state.get("df_core")
+        
+        if df is None or df.empty:
+            st.info("Please upload data in the Ingest tab first.")
         else:
-            st.write("Please upload data in the Ingest tab first.")
+            # Create two columns: plots on left, profile on right
+            col1, col2 = st.columns([2, 1])
+            
+            with col1:
+                # Render plots and get selected system
+                selected_system_id = render_plots_tab(df)
+                
+                # Update session state if selection changed
+                if selected_system_id:
+                    st.session_state.selected_system_id = selected_system_id
+            
+            with col2:
+                # Show profile panel
+                render_profile_panel(df, st.session_state.get("selected_system_id"))
 
 
 if __name__ == "__main__":

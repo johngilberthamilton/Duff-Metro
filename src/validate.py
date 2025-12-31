@@ -303,14 +303,24 @@ def convert_numeric_columns(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[str]]:
         if col in df_copy.columns:
             original_values = df_copy[col].copy()
             converted_series, failed_values = robust_to_numeric(df_copy[col], col)
-            df_copy[col] = converted_series
             
-            # Report errors if any
-            if failed_values:
-                errors.append(
-                    f"Column '{col}': Could not convert values to numeric. "
-                    f"Example failing values: {failed_values}"
-                )
+            # For ANNUAL_RIDERSHIP and LAST_MAJOR_UPDATE, explicitly set failed conversions to NaN
+            # and suppress error reporting (these columns are expected to have some non-numeric values)
+            if col in ["ANNUAL_RIDERSHIP", "LAST_MAJOR_UPDATE"]:
+                # Ensure any values that couldn't be converted are explicitly NaN
+                # Force any remaining non-numeric values to NaN as a final safety check
+                df_copy[col] = converted_series
+                # Additional explicit conversion to ensure all non-numeric are NaN
+                df_copy[col] = pd.to_numeric(df_copy[col], errors='coerce')
+                # Don't report errors for these columns - non-numeric values are expected and converted to NaN
+            else:
+                df_copy[col] = converted_series
+                # Report errors if any (for other columns)
+                if failed_values:
+                    errors.append(
+                        f"Column '{col}': Could not convert values to numeric. "
+                        f"Example failing values: {failed_values}"
+                    )
     
     return df_copy, errors
 

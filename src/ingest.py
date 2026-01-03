@@ -181,6 +181,18 @@ def render_ingest_tab():
                         st.session_state.df_core = df_cleaned
                         st.session_state.data_version = data_version
                         
+                        # Save to S3
+                        try:
+                            from src.s3_storage import save_table_to_s3
+                            with st.spinner("Saving to S3..."):
+                                if save_table_to_s3(df_cleaned):
+                                    st.success("✅ Table saved to S3.")
+                                else:
+                                    st.warning("⚠️ Failed to save to S3, but data is available in this session.")
+                        except Exception as e:
+                            # If S3 is not configured, continue without error
+                            st.warning(f"⚠️ S3 not configured or unavailable: {str(e)}")
+                        
                         st.success(f"✅ File processed successfully! Loaded {len(df_cleaned)} rows.")
                         
                         # Show validation issues if any

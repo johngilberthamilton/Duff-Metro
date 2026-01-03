@@ -47,6 +47,50 @@ def main():
     """Main app function."""
     initialize_session_state()
     
+    # Check for existing S3 table on first run
+    if not st.session_state.s3_table_checked:
+        st.session_state.s3_table_checked = True
+        try:
+            from src.s3_storage import check_s3_table_exists, load_table_from_s3
+            
+            if check_s3_table_exists():
+                st.session_state.s3_table_exists = True
+                
+                # Show preview and choice
+                st.title("Duff Metro:  Subway Systems Explorer")
+                st.markdown("")
+                
+                st.info("📦 Found existing preprocessed table in S3.")
+                
+                # Load and show preview
+                df_preview = load_table_from_s3()
+                if df_preview is not None:
+                    st.subheader("📊 Preview of Existing Table")
+                    st.dataframe(df_preview.head(10), use_container_width=True)
+                    st.caption(f"Total rows: {len(df_preview)}")
+                    
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        if st.button("✅ Use Existing Table", type="primary", use_container_width=True):
+                            st.session_state.df_core = df_preview
+                            st.session_state.s3_table_loaded = True
+                            st.rerun()
+                    
+                    with col2:
+                        if st.button("📤 Upload New Table", type="secondary", use_container_width=True):
+                            st.session_state.s3_table_loaded = False
+                            st.rerun()
+                else:
+                    # If preview failed to load, continue to normal flow
+                    st.session_state.s3_table_exists = False
+                    st.warning("⚠️ Could not load preview from S3. Proceeding to normal upload flow.")
+            else:
+                st.session_state.s3_table_exists = False
+        except Exception as e:
+            # If S3 is not configured or there's an error, continue normally
+            st.session_state.s3_table_exists = False
+            # Don't show error to user if it's just missing config - app should work without S3
+    
     st.title("Duff Metro:  Subway Systems Explorer")
     st.markdown("")
     

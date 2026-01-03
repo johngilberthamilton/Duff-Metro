@@ -20,6 +20,7 @@ def initialize_session_state():
     - df_core: The cleaned and validated dataframe
     - data_version: Hash of the uploaded Excel file bytes
     - selected_system_id: Currently selected subway system ID
+    - S3 state flags: Track S3 table existence and loading status
     """
     # Initialize colors (must be called first)
     initialize_colors()
@@ -32,6 +33,16 @@ def initialize_session_state():
     
     if "selected_system_id" not in st.session_state:
         st.session_state.selected_system_id = None
+    
+    # S3 state flags
+    if "s3_table_checked" not in st.session_state:
+        st.session_state.s3_table_checked = False
+    
+    if "s3_table_exists" not in st.session_state:
+        st.session_state.s3_table_exists = False
+    
+    if "s3_table_loaded" not in st.session_state:
+        st.session_state.s3_table_loaded = False
 
 
 def compute_data_version(file_bytes: bytes) -> str:

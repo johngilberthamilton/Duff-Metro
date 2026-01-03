@@ -47,8 +47,12 @@ def main():
     """Main app function."""
     initialize_session_state()
     
-    # Check for existing S3 table on first run
-    if not st.session_state.s3_table_checked:
+    # Check for existing S3 table on first run OR if user hasn't made a choice yet
+    if not st.session_state.s3_table_checked or (
+        st.session_state.s3_table_exists and 
+        not st.session_state.s3_table_loaded and 
+        st.session_state.df_core is None
+    ):
         st.session_state.s3_table_checked = True
         try:
             from src.s3_storage import check_s3_table_exists, load_table_from_s3
@@ -56,34 +60,40 @@ def main():
             if check_s3_table_exists():
                 st.session_state.s3_table_exists = True
                 
-                # Show preview and choice
-                st.title("Duff Metro:  Subway Systems Explorer")
-                st.markdown("")
-                
-                st.info("📦 Found existing preprocessed table in S3.")
-                
-                # Load and show preview
-                df_preview = load_table_from_s3()
-                if df_preview is not None:
-                    st.subheader("📊 Preview of Existing Table")
-                    st.dataframe(df_preview.head(10), use_container_width=True)
-                    st.caption(f"Total rows: {len(df_preview)}")
+                # Only show preview if user hasn't loaded data yet
+                if st.session_state.df_core is None:
+                    # Show preview and choice
+                    st.title("Duff Metro:  Subway Systems Explorer")
+                    st.markdown("")
                     
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        if st.button("✅ Use Existing Table", type="primary", use_container_width=True):
-                            st.session_state.df_core = df_preview
-                            st.session_state.s3_table_loaded = True
-                            st.rerun()
+                    st.info("📦 Found existing preprocessed table in S3.")
                     
-                    with col2:
-                        if st.button("📤 Upload New Table", type="secondary", use_container_width=True):
-                            st.session_state.s3_table_loaded = False
-                            st.rerun()
-                else:
-                    # If preview failed to load, continue to normal flow
-                    st.session_state.s3_table_exists = False
-                    st.warning("⚠️ Could not load preview from S3. Proceeding to normal upload flow.")
+                    # Load and show preview
+                    df_preview = load_table_from_s3()
+                    if df_preview is not None:
+                        st.subheader("📊 Preview of Existing Table")
+                        st.dataframe(df_preview.head(10), use_container_width=True)
+                        st.caption(f"Total rows: {len(df_preview)}")
+                        
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            if st.button("✅ Use Existing Table", type="primary", use_container_width=True):
+                                st.session_state.df_core = df_preview
+                                st.session_state.s3_table_loaded = True
+                                st.session_state.data_version = "s3_loaded"
+                                st.rerun()
+                        
+                        with col2:
+                            if st.button("📤 Upload New Table", type="secondary", use_container_width=True):
+                                st.session_state.s3_table_loaded = False
+                                st.rerun()
+                        
+                        # STOP here - don't show tabs until user makes a choice
+                        st.stop()
+                    else:
+                        # If preview failed to load, continue to normal flow
+                        st.session_state.s3_table_exists = False
+                        st.warning("⚠️ Could not load preview from S3. Proceeding to normal upload flow.")
             else:
                 st.session_state.s3_table_exists = False
         except Exception as e:

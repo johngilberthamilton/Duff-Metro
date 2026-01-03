@@ -324,10 +324,14 @@ def render_map_view(df: pd.DataFrame, view_mode: str = "Default") -> Optional[st
         bearing=0
     )
     
-    # Create tooltip with all requested information
+    # Create tooltip matching Plotly's default style (clean, minimal, white background)
+    # Content matches the unified tooltip format
+    # PyDeck uses {variable} syntax (single braces) for template variables
+    # In f-strings, {{ becomes {, so {{CITY}} in code becomes {CITY} in output
+    # Styling matches Plotly's default tooltip exactly: subtle border, minimal padding, no shadow
     tooltip_html = f"""
-    <div style="padding: 5px; background-color: {TOOLTIP_BACKGROUND_COLOR}; color: {TOOLTIP_TEXT_COLOR}; border: 0.33px solid {TOOLTIP_BORDER_COLOR};">
-        <div><b>{{CITY}}, {{COUNTRY}}</b></div>
+    <div style="padding: 10px; background-color: {TOOLTIP_BACKGROUND_COLOR}; color: {TOOLTIP_TEXT_COLOR}; border: 1px solid {TOOLTIP_BORDER_COLOR}; border-radius: 3px; font-family: "Open Sans", verdana, arial, sans-serif; font-size: 12px;">
+        <div style="font-weight: bold; margin-bottom: 2px;">{{CITY}}, {{COUNTRY}}</div>
         <div>Visited: {{VISITED_DISPLAY}}</div>
         <div>Year Opened: {{OPENED_YEAR_DISPLAY}}</div>
         <div>Last Major Update: {{LAST_UPDATE_DISPLAY}}</div>

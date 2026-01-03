@@ -45,9 +45,10 @@ DATE_BUCKET_COLORS = {
 }
 
 # Tooltip Colors (for PyDeck map tooltips)
-TOOLTIP_BACKGROUND_COLOR = "#FFFFFF"  # White background
-TOOLTIP_TEXT_COLOR = "#000000"        # Black text
-TOOLTIP_BORDER_COLOR = "#000000"      # Black border
+# Matching Plotly's default tooltip styling: white background, black text, subtle border
+TOOLTIP_BACKGROUND_COLOR = "#FFFFFF"  # White background (matches Plotly)
+TOOLTIP_TEXT_COLOR = "#000000"        # Black text (matches Plotly)
+TOOLTIP_BORDER_COLOR = "#e0e0e0"      # Light gray border (matches Plotly's subtle border)
 
 # Plotly Colors (String format for Plotly API)
 PLOTLY_BACKGROUND_COLOR = "white"

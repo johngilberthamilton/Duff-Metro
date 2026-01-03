@@ -58,12 +58,27 @@ def main():
         if df is None or df.empty:
             st.info("Please upload data in the Ingest tab first.")
         else:
+            # Add selectbox for view mode
+            view_mode = st.selectbox(
+                "Map View Mode",
+                options=[
+                    "Default",
+                    "Size by Number of Lines",
+                    "Size by Total Miles",
+                    "Color by Visited Status",
+                    "Color by Opening Date",
+                    "Color by Last Major Update"
+                ],
+                index=0,  # Default to "Default"
+                help="Choose how to visualize subway systems on the map"
+            )
+            
             # Create two columns: map on left, profile on right
             col1, col2 = st.columns([2, 1])
             
             with col1:
                 # Render map and get selected system
-                selected_system_id = render_map_view(df)
+                selected_system_id = render_map_view(df, view_mode=view_mode)
                 
                 # Update session state if selection changed
                 if selected_system_id:

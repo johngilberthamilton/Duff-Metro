@@ -20,7 +20,7 @@ COLUMN_MAPPINGS = {
     "COUNTRY": ["COUNTRY", "Country"],
     "SYSTEM_ID": ["SYSTEM_ID", "Sequence"],
     "SYSTEM_NAME": ["SYSTEM_NAME", "Name"],
-    "OPENED_YEAR": ["OPENED_YEAR"],
+    "OPENED_YEAR": ["OPENED_YEAR", "Year opened (General Format)"],
     "NUMBER_OF_LINES": ["NUMBER_OF_LINES", "Lines"],
     "TOTAL_MILES": ["TOTAL_MILES", "System length   miles"],
     "ANNUAL_RIDERSHIP": ["ANNUAL_RIDERSHIP", "Annual Ridership"],
@@ -37,7 +37,6 @@ IGNORE_COLUMNS = [
     "City",  # Use CITY instead
     "Year when First Ridden",
     "Continent",
-    "Year opened (General Format)",
     "Year opened     (date order)",
     "System length  km",  # Prefer miles
     "Year of ridership data ",

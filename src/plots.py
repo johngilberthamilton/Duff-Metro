@@ -9,6 +9,16 @@ import streamlit as st
 import plotly.express as px
 from typing import Optional
 
+from src.colors import (
+    PLOTLY_BACKGROUND_COLOR,
+    PLOTLY_PAPER_COLOR,
+    PLOTLY_FONT_COLOR,
+    PLOTLY_GRID_COLOR,
+    PLOTLY_LINE_COLOR,
+    PLOTLY_MARKER_COLOR,
+    PLOTLY_MARKER_COLOR_SEQUENCE
+)
+
 
 def create_lines_vs_miles_plot(df: pd.DataFrame) -> Optional[str]:
     """
@@ -40,20 +50,20 @@ def create_lines_vs_miles_plot(df: pd.DataFrame) -> Optional[str]:
             "NUMBER_OF_LINES": "Number of Lines"
         },
         title="Lines vs Miles",
-        color_discrete_sequence=["white"]  # White points to match theme
+        color_discrete_sequence=PLOTLY_MARKER_COLOR_SEQUENCE
     )
     
     # Update layout for dark theme
     fig.update_layout(
-        plot_bgcolor="black",
-        paper_bgcolor="black",
-        font_color="white",
-        xaxis=dict(gridcolor="gray", linecolor="white"),
-        yaxis=dict(gridcolor="gray", linecolor="white")
+        plot_bgcolor=PLOTLY_BACKGROUND_COLOR,
+        paper_bgcolor=PLOTLY_PAPER_COLOR,
+        font_color=PLOTLY_FONT_COLOR,
+        xaxis=dict(gridcolor=PLOTLY_GRID_COLOR, linecolor=PLOTLY_LINE_COLOR),
+        yaxis=dict(gridcolor=PLOTLY_GRID_COLOR, linecolor=PLOTLY_LINE_COLOR)
     )
     
     # Update marker color
-    fig.update_traces(marker=dict(color="white", size=8))
+    fig.update_traces(marker=dict(color=PLOTLY_MARKER_COLOR, size=8))
     
     # Render plot
     event = st.plotly_chart(
@@ -125,20 +135,20 @@ def create_ridership_vs_population_plot(df: pd.DataFrame) -> Optional[str]:
             "ANNUAL_RIDERSHIP": "Annual Ridership"
         },
         title="Annual Ridership vs City Population",
-        color_discrete_sequence=["white"]  # White points to match theme
+        color_discrete_sequence=PLOTLY_MARKER_COLOR_SEQUENCE
     )
     
     # Update layout for dark theme
     fig.update_layout(
-        plot_bgcolor="black",
-        paper_bgcolor="black",
-        font_color="white",
-        xaxis=dict(gridcolor="gray", linecolor="white"),
-        yaxis=dict(gridcolor="gray", linecolor="white")
+        plot_bgcolor=PLOTLY_BACKGROUND_COLOR,
+        paper_bgcolor=PLOTLY_PAPER_COLOR,
+        font_color=PLOTLY_FONT_COLOR,
+        xaxis=dict(gridcolor=PLOTLY_GRID_COLOR, linecolor=PLOTLY_LINE_COLOR),
+        yaxis=dict(gridcolor=PLOTLY_GRID_COLOR, linecolor=PLOTLY_LINE_COLOR)
     )
     
     # Update marker color
-    fig.update_traces(marker=dict(color="white", size=8))
+    fig.update_traces(marker=dict(color=PLOTLY_MARKER_COLOR, size=8))
     
     # Render plot
     event = st.plotly_chart(

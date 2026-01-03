@@ -28,7 +28,7 @@ This document defines the expected schema for the subway systems Excel file.
 - `Country`: USE for inference of location
 - `Continent`: IGNORE
 - `Name`: name of the subway	
-- `Year opened (General Format)`: IGNORE
+- `Year opened (General Format)`: year the subway was opened
 - `Year opened     (date order)`: IGNORE
 - `Year of last expansion`: year of last expansion
 - `Stations`: the number of stations in the subway system

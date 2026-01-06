@@ -303,9 +303,9 @@ def convert_numeric_columns(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[str]]:
             original_values = df_copy[col].copy()
             converted_series, failed_values = robust_to_numeric(df_copy[col], col)
             
-            # For ANNUAL_RIDERSHIP and LAST_MAJOR_UPDATE, explicitly set failed conversions to NaN
+            # For ANNUAL_RIDERSHIP, LAST_MAJOR_UPDATE, and CITY_POPULATION, explicitly set failed conversions to NaN
             # and suppress error reporting (these columns are expected to have some non-numeric values)
-            if col in ["ANNUAL_RIDERSHIP", "LAST_MAJOR_UPDATE"]:
+            if col in ["ANNUAL_RIDERSHIP", "LAST_MAJOR_UPDATE", "CITY_POPULATION"]:
                 # Ensure any values that couldn't be converted are explicitly NaN
                 # Force any remaining non-numeric values to NaN as a final safety check
                 df_copy[col] = converted_series
@@ -381,6 +381,10 @@ def validate_dataframe(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[str]]:
     
     # Step 1: Map and normalize column names
     df_cleaned = map_columns_to_normalized(df_copy)
+    
+    # Step 1.5: Ensure CITY_POPULATION column exists with NaN values if missing
+    if "CITY_POPULATION" not in df_cleaned.columns:
+        df_cleaned["CITY_POPULATION"] = pd.NA
     
     # Step 2: Check for required columns (before generating SYSTEM_ID)
     missing_required = validate_required_columns(df_cleaned)

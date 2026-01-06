@@ -63,7 +63,7 @@ def main():
                 # Only show preview if user hasn't loaded data yet
                 if st.session_state.df_core is None:
                     # Show preview and choice
-                    st.title("🐥 Duff Metro:  Subway Systems Explorer")
+                    st.title("Duff Metro:  Subway Systems Explorer")
                     st.markdown("")
                     
                     st.info("📦 Found existing preprocessed table in S3.")
@@ -101,16 +101,32 @@ def main():
             st.session_state.s3_table_exists = False
             # Don't show error to user if it's just missing config - app should work without S3
     
-    st.title("🐥 Duff Metro:  Subway Systems Explorer")
+    st.title("Duff Metro:  Subway Systems Explorer")
     st.markdown("")
     
     # Create tabs
-    tab1, tab2, tab3 = st.tabs(["Ingest", "Map", "Plots"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Intro", "Ingest", "Map", "Plots"])
     
     with tab1:
-        render_ingest_tab()
+        st.markdown("""
+I have mission to ride all of the subway systems in the world built before 1985, and then some.  This website is where I'm collecting information,  synthesizing these experiences, and, with the kind help of a skillful friend, John Hamilton, helping us visualize the data.
+
+Ask yourself:
+What rides are done and to be done?
+What do you learn about societies and cities by riding metros? 
+What geographic areas are happening or stagnant for metros?  
+What are your thoughts and questions about subways?
+
+Take a look at some of the data.
+Share your input to the Metro Lit syllabus.
+Enjoy getting to know places and people on their metros.
+Support sustainable urban and social development: ride metro systems yourselves.
+        """)
     
     with tab2:
+        render_ingest_tab()
+    
+    with tab3:
         st.header("Map View")
         df = st.session_state.get("df_core")
         
@@ -146,7 +162,7 @@ def main():
                 # Show profile panel
                 render_profile_panel(df, st.session_state.get("selected_system_id"))
     
-    with tab3:
+    with tab4:
         st.header("Plots View")
         df = st.session_state.get("df_core")
         

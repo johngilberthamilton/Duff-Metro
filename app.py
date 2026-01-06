@@ -109,6 +109,8 @@ def main():
     
     with tab1:
         st.markdown("""
+Hi! I'm Lydia. 
+
 I have mission to ride all of the subway systems in the world built before 1985, and then some.  This website is where I'm collecting information,  synthesizing these experiences, and, with the kind help of a skillful friend, John Hamilton, helping us visualize the data.
 
 Ask yourself:

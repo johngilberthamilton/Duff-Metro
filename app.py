@@ -19,8 +19,8 @@ from src.colors import (
 
 # Configure page
 st.set_page_config(
-    page_title="Main Page",
-    page_icon="🚈",
+    page_title="Duff Metro",
+    page_icon="🚂",
     layout="wide",
     initial_sidebar_state="collapsed"
 )

@@ -63,7 +63,7 @@ def main():
                 # Only show preview if user hasn't loaded data yet
                 if st.session_state.df_core is None:
                     # Show preview and choice
-                    st.title("Duff Metro:  Subway Systems Explorer")
+                    st.title("🐥 Duff Metro:  Subway Systems Explorer")
                     st.markdown("")
                     
                     st.info("📦 Found existing preprocessed table in S3.")
@@ -101,7 +101,7 @@ def main():
             st.session_state.s3_table_exists = False
             # Don't show error to user if it's just missing config - app should work without S3
     
-    st.title("Duff Metro:  Subway Systems Explorer")
+    st.title("🐥 Duff Metro:  Subway Systems Explorer")
     st.markdown("")
     
     # Create tabs

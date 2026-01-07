@@ -276,6 +276,17 @@ def convert_numeric_columns(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[str]]:
                     converted.loc[idx] = None
                     continue
             
+            elif column_name == "OPENED_YEAR":
+                # Extract year from dates or year strings (4-digit year pattern)
+                year_match = re.search(r'(\d{4})', val)
+                if year_match:
+                    converted.loc[idx] = year_match.group(1)
+                    continue
+                else:
+                    # No year pattern found - convert to NaN
+                    converted.loc[idx] = None
+                    continue
+            
             # For other columns, remove common text annotations in parentheses
             val = re.sub(r'\([^)]*\)', '', val)
             
